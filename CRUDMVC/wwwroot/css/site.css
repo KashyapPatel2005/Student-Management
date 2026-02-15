@@ -1,0 +1,262 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  display:flex;
+  flex-direction:column;
+}
+
+.link{
+    font-size:large;
+    text-decoration:none;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+
+header {
+    width:100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+
+.table-dark tr th{
+   padding:3rem;
+}
+td{
+    padding:3rem;
+}
+
+
+.dashboard-sidebar {
+    background-color: #1e1e2f;
+    min-height: 100vh;
+    padding: 1.5rem 1rem;
+}
+
+    .dashboard-sidebar .nav-link {
+        color: #cbd5e1;
+        padding: 12px 14px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease;
+    }
+
+        .dashboard-sidebar .nav-link i {
+            width: 20px;
+        }
+
+        .dashboard-sidebar .nav-link:hover {
+            background-color: #2d2d44;
+            color: #ffffff;
+        }
+
+        .dashboard-sidebar .nav-link.active {
+            background-color: #0d6efd;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+.dashboard-content {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+
+
+
+.student-stack {
+    margin: auto;
+}
+
+.student-stack-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.25s ease;
+}
+
+    .student-stack-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+    }
+
+.student-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    font-size: 1.4rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.student-info {
+    flex-grow: 1;
+}
+
+    .student-info h5 {
+        margin-bottom: 0.25rem;
+    }
+
+.student-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+    .student-actions form {
+        margin: 0;
+    }
+
+@media (max-width: 576px) {
+    .student-stack-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .student-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+
+
+
+
+.profile-card {
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: white;
+    padding: 30px;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: white;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.info-box {
+    border-radius: 12px;
+    padding: 18px;
+    background-color: #f8f9fa;
+    height: 100%;
+}
+
+.info-label {
+    font-size: 13px;
+    color: #6c757d;
+    margin-bottom: 4px;
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212529;
+}
+
+
+.search-container{
+    position:relative;
+}
+
+.search-icon{
+    position:absolute;
+    right:15px;
+    top:15px;
+
+    
+}
+
+
+.profile-card {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: white;
+    padding: 30px;
+}
+
+.profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: white;
+    color: #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.info-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.info-label {
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+}

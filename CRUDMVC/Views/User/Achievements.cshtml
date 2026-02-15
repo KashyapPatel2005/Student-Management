@@ -1,0 +1,64 @@
+﻿@model List<CRUDMVC.Models.Entities.Achievement>
+@{
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">My Achievements</h3>
+
+        <a asp-action="AddAchievement"
+           class="btn btn-primary px-4">
+            + Add Achievement
+        </a>
+    </div>
+
+    <div class="row g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="fw-bold mb-0">@item.Title</h5>
+                            <span class="badge bg-light text-dark border">
+                                @item.AchievedOn.ToShortDateString()
+                            </span>
+                        </div>
+
+                        <p class="text-muted mb-3">
+                            @item.Description
+                        </p>
+
+                     
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                Achievement Record
+                            </small>
+
+                         <div class="d-flex gap-2">
+                                <form> 
+                                    <button class="btn btn-outline-danger">Delete</button>
+                                </form>
+                                @if (!string.IsNullOrEmpty(item.CertificateFilePath))
+                                {
+                                    <a asp-action="DownloadCertificate"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-outline-success btn-sm px-3">
+                                        Download Certificate
+                                    </a>
+                                }
+                         </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+</div>

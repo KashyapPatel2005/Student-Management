@@ -1,0 +1,273 @@
+﻿@* @{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    bool isAdmin = User.IsInRole("Admin");
+    bool isUser = User.IsInRole("User");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dashboard</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body class="bg-light">
+
+    <!-- TOP NAVBAR -->
+    <nav class="navbar navbar-dark bg-dark border-bottom px-4 py-3">
+        <span class="navbar-brand mb-0 h1">Student Portal</span>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center text-white me-3">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+                     style="width: 40px; height: 40px;">
+                    <span class="fw-bold">
+                        @User.Identity?.Name?.ToUpper().FirstOrDefault()
+                    </span>
+                </div>
+                <span class="fw-semibold">@User.Identity.Name</span>
+            </div>
+
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button class="btn btn-danger btn-sm">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+
+            <!-- SIDEBAR -->
+            <aside class="col-md-2 bg-dark text-white">
+
+                <ul class="nav flex-column mt-4">
+
+                    @if (isAdmin)
+                    {
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white @(currentController == "Students" ? "active fw-bold" : "")"
+                               asp-controller="Students" asp-action="List">
+                                <i class="fa-solid fa-users me-2"></i> Students
+                            </a>
+                        </li>
+                    }
+
+                    @if (isUser)
+                    {
+                        <li class="nav-item mb-2 border-bottom">
+                            <a class="nav-link text-white @(currentController == "UserDashboard" ? "active fw-bold" : "")"
+                               asp-controller="UserDashboard" asp-action="Index">
+                                <i class="fa-solid fa-user me-2"></i> My Profile
+                            </a>
+                        </li>
+
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white"
+                               asp-controller="UserDashboard" asp-action="Lessons">
+                                <i class="fa-solid fa-book me-2"></i> Lessons
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="col-md-10 p-4">
+                @RenderBody()
+            </main>
+
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", false)
+</body>
+</html> *@
+
+
+
+
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool isAdmin = User.IsInRole("Admin");
+    bool isUser = User.IsInRole("User");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Dashboard</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+
+        .dashboard-sidebar {
+            background: #212529;
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+            .dashboard-sidebar .nav-link {
+                color: #ced4da;
+                padding: 14px 16px;
+                border-radius: 10px;
+                margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font-size: 15px;
+                transition: all 0.3s ease;
+            }
+
+                .dashboard-sidebar .nav-link i {
+                    width: 22px;
+                    text-align: center;
+                    font-size: 16px;
+                }
+
+                .dashboard-sidebar .nav-link:hover {
+                    background-color: #343a40;
+                    color: #ffffff;
+                    transform: translateX(6px);
+                }
+
+                .dashboard-sidebar .nav-link.active {
+                    background-color: #0d6efd;
+                    color: #ffffff;
+                    font-weight: 600;
+                    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.4);
+                }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark border-bottom px-4 py-3">
+        <span class="navbar-brand fw-semibold">Student Portal</span>
+
+        <div class="ms-auto d-flex align-items-center gap-3 text-white">
+            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center"
+                 style="width:40px;height:40px;">
+                <strong>@User.Identity?.Name?.ToUpper().FirstOrDefault()</strong>
+            </div>
+            <span>@User.Identity.Name</span>
+
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button class="btn btn-danger btn-sm ms-3">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <aside class="col-md-2 dashboard-sidebar">
+
+                <ul class="nav flex-column">
+
+                    @if (isUser)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Index" ? "active" : "")"
+                               asp-controller="User" asp-action="Index">
+                                <i class="fa-solid fa-user text-light"></i>
+                                <span class="ms-2">My Profile</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Lessons" ? "active" : "")"
+                               asp-controller="User" asp-action="Lessons">
+                                <i class="fa-solid fa-book-open text-light"></i>
+                                <span class="ms-2">Lessons</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Progress" ? "active" : "")"
+                               asp-controller="UserDashboard" asp-action="Progress">
+                                <i class="fa-solid fa-chart-line text-light"></i>
+                                <span class="ms-2">My Progress</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Achievements" ? "active" : "")"
+                               asp-controller="User" asp-action="Achievements">
+                                <i class="fa-solid fa-award text-light"></i>
+                                <span class="ms-2">Achievements / Certificates</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "History" ? "active" : "")"
+                               asp-controller="UserDashboard" asp-action="History">
+                                <i class="fa-solid fa-clock-rotate-left text-light"></i>
+                                <span class="ms-2">History</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentAction == "Notifications" ? "active" : "")"
+                               asp-controller="UserDashboard" asp-action="Notifications">
+                                <i class="fa-solid fa-bell text-light"></i>
+                                <span class="ms-2">Notifications</span>
+                            </a>
+                        </li>
+
+
+                    }
+
+                    @if (isAdmin)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Students" ? "active" : "")"
+                               asp-controller="Students" asp-action="List">
+                                <i class="fa-solid fa-users"></i>
+                                Students
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+
+            </aside>
+
+            <main class="col-md-10 dashboard-content">
+                @RenderBody()
+            </main>
+
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", false)
+
+</body>
+</html>

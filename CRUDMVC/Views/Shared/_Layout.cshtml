@@ -1,0 +1,163 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+
+    bool isAuthenticated = User.Identity.IsAuthenticated;
+    bool isAdmin = User.IsInRole("Admin");
+    bool isUser = User.IsInRole("User");
+
+    bool showAdminSidebar = isAuthenticated && isAdmin;
+
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CRUDMVC</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CRUDMVC.styles.css" asp-append-version="true" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+
+<body>
+
+    <nav class="navbar navbar-dark bg-dark border-bottom px-4 py-3">
+        <span class="navbar-brand mb-0 h1">Student Portal</span>
+
+        <div class="ms-auto d-flex align-items-center gap-3">
+            @if (!isAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-dark">
+                    Register
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-dark">
+                    Login
+                </a>
+            }
+            else
+            {
+                <div class="d-flex align-items-center text-white me-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+                         style="width: 40px; height: 40px;">
+                        <span class="fw-bold">
+                            @User.Identity?.Name?.ToUpper().FirstOrDefault()
+                        </span>
+                    </div>
+                    <span class="fw-semibold">@User.Identity.Name</span>
+                </div>
+
+
+                <form asp-controller="Account"
+                      asp-action="Logout"
+                      method="post"
+                      class="d-inline">
+                    <button type="submit" class="btn btn-danger btn-sm">
+                        Logout
+                    </button>
+                </form>
+            }
+        </div>
+    </nav>
+
+    @if (showAdminSidebar)
+    {
+
+        <div class="container-fluid">
+            <div class="row">
+
+ 
+                @* <nav class="col-md-2 d-none d-md-block bg-light sidebar vh-100 border border-secondary pt-3 px-3">
+                    <ul class="nav flex-column">
+
+                        <li class="nav-item border border-secondary">
+                            <a class="nav-link" asp-controller="Students" asp-action="List">
+                                All Students <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item border border-secondary mt-3">
+                            <a class="nav-link" asp-controller="Students" asp-action="Add">
+                                Add Student <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav> *@
+
+                <aside class="col-md-2 dashboard-sidebar">
+
+                    <ul class="nav flex-column">
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Students" && currentAction == "List" ? "active" : "")"
+                               asp-controller="Students"
+                               asp-action="List">
+                                <i class="fa-solid fa-users text-light"></i>
+                                <span class="ms-2">All Students</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "Students" && currentAction == "Add" ? "active" : "")"
+                               asp-controller="Students"
+                               asp-action="Add">
+
+                                <i class="fa-solid fa-user-plus text-light"></i>
+                                <span class="ms-2">Add Student</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-white"
+                               asp-controller="Lessons"
+                               asp-action="Create">
+                                <i class="fa-solid fa-plus"></i>
+                                Add Lesson
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </aside>
+
+
+   
+                <main class="col-md-10  vh-100">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @RenderBody()
+                </main>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <main class="container">
+            @RenderBody()
+        </main>
+    }
+
+    <footer class="d-flex justify-content-center p-4 border-top border-secondary mt-5">
+        <strong>Footer</strong>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+

@@ -1,0 +1,110 @@
+﻿@* @{
+    Layout = "_DashboardLayout";
+}
+
+@model List<Lesson>
+
+<h3>My Lessons</h3>
+
+@foreach (var lesson in Model)
+{
+    <div class="card p-3 mb-3 shadow-sm">
+        <h5>@lesson.Title</h5>
+        <p>@lesson.Description</p>
+
+        @if (ViewBag.Completed.Contains(lesson.Id))
+        {
+            <span class="badge bg-success">
+                Completed
+            </span>
+        }
+        else
+        {
+            <form asp-action="CompleteLesson" method="post">
+                <input type="hidden"
+                       name="lessonId"
+                       value="@lesson.Id" />
+
+                <button type="submit"
+                        class="btn btn-sm btn-primary">
+                    Mark as Completed
+                </button>
+            </form>
+        }
+    </div>
+} *@
+
+
+@{
+    Layout = "_DashboardLayout";
+}
+
+@model List<Lesson>
+
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+    <div class="mb-4">
+        <h3 class="fw-bold mb-0">My Lessons</h3>
+        <p class="text-muted mb-0">Track your progress and complete your lessons.</p>
+    </div>
+
+    <div class="row g-3">
+
+        @foreach (var lesson in Model)
+        {
+            <div class="col-12">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4">
+
+                        <h5 class="fw-bold mb-2">
+                            @lesson.Title
+                        </h5>
+
+                        <p class="text-muted mb-3">
+                            @lesson.Description
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            @if (ViewBag.Completed.Contains(lesson.Id))
+                            {
+                                <span class="badge bg-success px-3 py-2">
+                                    ✓ Completed
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark px-3 py-2">
+                                    Pending
+                                </span>
+                            }
+
+                            @if (!ViewBag.Completed.Contains(lesson.Id))
+                            {
+                                <form asp-action="CompleteLesson"
+                                      method="post"
+                                      class="mb-0">
+
+                                    <input type="hidden"
+                                           name="lessonId"
+                                           value="@lesson.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-primary px-3">
+                                        Mark as Completed
+                                    </button>
+                                </form>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

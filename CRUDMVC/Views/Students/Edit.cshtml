@@ -1,0 +1,76 @@
+﻿@model CRUDMVC.Models.Entities.Student;
+
+<div class="container-fluid bg-light min-vh-100 px-4 px-lg-5 py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-7">
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-semibold mb-4 mx-auto">Edit Student</h2>
+                    </div>
+
+                    @if (Model is null)
+                    {
+                        <div class="alert alert-warning rounded-3 mb-0">
+                            No student was found with this Id
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post" class="needs-validation">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Id</label>
+                                <input asp-for="Id"
+                                       class="form-control"
+                                       readonly />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Name</label>
+                                <input asp-for="Name"
+                                       class="form-control"
+                                       placeholder="Enter student name" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input asp-for="Email"
+                                       type="email"
+                                       class="form-control"
+                                       placeholder="Enter email address" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Phone</label>
+                                <input asp-for="Phone"
+                                       class="form-control"
+                                       placeholder="Enter phone number" />
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button type="submit"
+                                        class="btn btn-primary px-4">
+                                    Save
+                                </button>
+
+                                <a asp-controller="Students"
+                                   asp-action="List"
+                                   class="btn btn-outline-secondary px-4">
+                                    Cancel
+                                </a>
+                            </div>
+
+                        </form>
+                    }
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

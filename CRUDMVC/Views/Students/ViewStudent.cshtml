@@ -1,0 +1,73 @@
+﻿@model CRUDMVC.Models.Entities.Student;
+
+
+<div class="container-fluid bg-light min-vh-100 px-4 px-lg-5 py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-lg-5">
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                             style="width: 48px; height: 48px;">
+                            <span class="fw-bold">@Model.Name[0]</span>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold mb-0">@Model.Name</h5>
+                        </div>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="row g-3">
+
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Student ID</span>
+                                <span class="fw-semibold">@Model.Id</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Email</span>
+                                <span class="fw-semibold">@Model.Email</span>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted">Phone</span>
+                                <span class="fw-semibold">@Model.Phone</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex gap-2">
+                        <a asp-controller="Students"
+                           asp-action="Edit"
+                           asp-route-id="@Model.Id"
+                           class="btn btn-outline-primary px-4">
+                            Edit
+                        </a>
+
+                        <a asp-controller="Students"
+                           asp-action="List"
+                           class="btn btn-outline-secondary px-4">
+                            Back
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
