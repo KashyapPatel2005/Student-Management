@@ -32,4 +32,11 @@ public class LessonsController : Controller
 
         return RedirectToAction(nameof(Index));
     }
+ 
+    public async Task<IActionResult> Analytics()
+    {
+        var data = await _lessonService.GetLessonAnalyticsAsync();
+        return View(data);
+    }
+
 }

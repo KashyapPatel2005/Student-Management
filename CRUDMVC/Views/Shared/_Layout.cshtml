@@ -41,7 +41,7 @@
             }
             else
             {
-                <div class="d-flex align-items-center text-white me-3">
+                @* <div class="d-flex align-items-center text-white me-3">
                     <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
                          style="width: 40px; height: 40px;">
                         <span class="fw-bold">
@@ -59,7 +59,34 @@
                     <button type="submit" class="btn btn-danger btn-sm">
                         Logout
                     </button>
-                </form>
+                </form> *@
+
+                <div class="dropdown ms-auto">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                       id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+                             style="width: 35px; height: 35px;">
+                            <span class="fw-bold text-white small">
+                                @User.Identity?.Name?.ToUpper().FirstOrDefault()
+                            </span>
+                        </div>
+
+                        <span class="fw-semibold d-none d-sm-inline">@User.Identity.Name</span>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2" aria-labelledby="userDropdown">
+
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="px-2">
+                                <button type="submit" class="dropdown-item rounded text-danger py-2">
+                                    <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
             }
         </div>
     </nav>
@@ -69,25 +96,6 @@
 
         <div class="container-fluid">
             <div class="row">
-
- 
-                @* <nav class="col-md-2 d-none d-md-block bg-light sidebar vh-100 border border-secondary pt-3 px-3">
-                    <ul class="nav flex-column">
-
-                        <li class="nav-item border border-secondary">
-                            <a class="nav-link" asp-controller="Students" asp-action="List">
-                                All Students <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-
-                        <li class="nav-item border border-secondary mt-3">
-                            <a class="nav-link" asp-controller="Students" asp-action="Add">
-                                Add Student <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </li>
-
-                    </ul>
-                </nav> *@
 
                 <aside class="col-md-2 dashboard-sidebar">
 
@@ -120,6 +128,16 @@
                                 Add Lesson
                             </a>
                         </li>
+
+                        <li class="nav-item mt-2">
+                            <a class="nav-link text-white"
+                               asp-controller="Lessons"
+                               asp-action="Analytics">
+                                <i class="fa-solid fa-chart-bar"></i>
+                                Lesson Analytics
+                            </a>
+                        </li>
+
 
                     </ul>
 

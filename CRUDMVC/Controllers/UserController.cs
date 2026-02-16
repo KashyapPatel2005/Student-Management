@@ -165,6 +165,18 @@ public class UserController : Controller
         return RedirectToAction(nameof(Lessons));
     }
 
+    public async Task<IActionResult> Progress()
+    {
+        var userId = _userManager.GetUserId(User);
+        
+        ViewBag.title = "Pogresssss";
+        
+
+
+        return View();
+    }
+
+
 
 
 }

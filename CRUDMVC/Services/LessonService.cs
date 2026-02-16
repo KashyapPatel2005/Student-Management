@@ -15,4 +15,8 @@
 
     public async Task<int> CountAsync()
         => await _repository.CountAsync();
+
+    public async Task<List<LessonAnalyticsViewModel>> GetLessonAnalyticsAsync()
+    => await _repository.GetLessonAnalyticsAsync();
+
 }

@@ -1,0 +1,123 @@
+﻿@* @model List<LessonAnalyticsViewModel>
+
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Lesson Analytics";
+}
+
+<h3 class="mb-4">Lesson Completion Analytics</h3>
+
+<table class="table">
+    <thead class="table table-dark table-striped">
+        <tr>
+            <th>Lesson</th>
+            <th>Total Users</th>
+            <th>Completed</th>
+            <th>Completion %</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.TotalUsers</td>
+                <td>@item.CompletedUsers</td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar bg-success"
+                             style="width:@item.Percentage%">
+                            @item.Percentage%
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@
+
+
+
+@model List<LessonAnalyticsViewModel>
+
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Lesson Analytics";
+    var totalLessons = Model.Count;
+    var avgCompletion = Model.Any() ? Model.Average(x => x.Percentage) : 0;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">Lesson Completion Analytics</h3>
+   
+        </div>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-3">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-3 text-primary me-3">
+                        <i class="fa-solid fa-book fa-xl"></i>
+                    </div>
+                    <div>
+                        <small class="text-muted d-block">Total Lessons</small>
+                        <span class="h4 fw-bold mb-0">@totalLessons</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3 text-uppercase fs-xs text-muted">Lesson Title</th>
+                        <th class="py-3 text-uppercase fs-xs text-muted">Total Students</th>
+                        <th class="py-3 text-uppercase fs-xs text-muted">Completed</th>
+                        <th class="py-3 text-uppercase fs-xs text-muted" style="width: 30%;">Engagement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <span class="fw-bold text-dark">@item.Title</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="fa-solid fa-users text-muted me-2"></i> @item.TotalUsers
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info bg-opacity-10 text-info px-3">
+                                    @item.CompletedUsers Users
+                                </span>
+                            </td>
+                            <td class="pe-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="progress flex-grow-1" style="height: 8px; border-radius: 10px;">
+                                        @{
+                                            var colorClass = item.Percentage < 40 ? "bg-danger" :
+                                            item.Percentage < 75 ? "bg-warning" : "bg-success";
+                                        }
+                                        <div class="progress-bar @colorClass"
+                                             role="progressbar"
+                                             style="width: @item.Percentage%; border-radius: 10px;"></div>
+                                    </div>
+                                    <span class="ms-3 fw-bold text-dark">@item.Percentage%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

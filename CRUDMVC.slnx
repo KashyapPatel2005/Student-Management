@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="CRUDMVC/CRUDMVC.csproj" DisplayName="CrudMvc" />
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+  </Folder>
+  <Project Path="CRUDMVC/CRUDMVC.csproj" />
 </Solution>
