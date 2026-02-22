@@ -15,7 +15,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CRUDMVC</title>
+    <title>Student Portal</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -41,25 +41,7 @@
             }
             else
             {
-                @* <div class="d-flex align-items-center text-white me-3">
-                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
-                         style="width: 40px; height: 40px;">
-                        <span class="fw-bold">
-                            @User.Identity?.Name?.ToUpper().FirstOrDefault()
-                        </span>
-                    </div>
-                    <span class="fw-semibold">@User.Identity.Name</span>
-                </div>
 
-
-                <form asp-controller="Account"
-                      asp-action="Logout"
-                      method="post"
-                      class="d-inline">
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        Logout
-                    </button>
-                </form> *@
 
                 <div class="dropdown ms-auto">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -137,6 +119,34 @@
                                 Lesson Analytics
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link"
+                               asp-controller="Chat"
+                               asp-action="Index">
+                                <i class="fa-solid fa-comments"></i>
+                                Chat Room
+                            </a>
+                        </li>
+
+
+                      @*   <li class="nav-item">
+                            <a class="nav-link @(currentController == "AdminTest" && currentAction == "Index" ? "active" : "")"
+                               asp-controller="AdminTest"
+                               asp-action="Index">
+                                <i class="fa-solid fa-clipboard-list text-light"></i>
+                                <span class="ms-2">Manage Tests</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link @(currentController == "AdminTest" && currentAction == "Results" ? "active" : "")"
+                               asp-controller="AdminTest"
+                               asp-action="Results">
+                                <i class="fa-solid fa-chart-column text-light"></i>
+                                <span class="ms-2">Test Results</span>
+                            </a>
+                        </li> *@
 
 
                     </ul>

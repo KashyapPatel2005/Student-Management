@@ -169,10 +169,19 @@ public class UserController : Controller
     {
         var userId = _userManager.GetUserId(User);
         
-        ViewBag.title = "Pogresssss";
-        
+        ViewBag.title = "Pogress";
 
+        var totalLessons = await _lessonService.CountAsync();
+        var completed = await _progressService.CountCompleted(userId);
+        var pending = totalLessons - completed;
 
+        var percentage = totalLessons == 0 ? 0 : (completed * 100) / totalLessons;
+
+        ViewBag.TotalLessons = totalLessons;
+        ViewBag.Completed = completed;
+        ViewBag.Pending = pending;
+        ViewBag.Percentage = percentage;
+       
         return View();
     }
 

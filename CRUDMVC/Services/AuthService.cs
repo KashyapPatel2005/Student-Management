@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
+
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+
 public class AuthService : IAuthService
 {
     private readonly UserManager<IdentityUser> _userManager;
@@ -45,24 +51,10 @@ public class AuthService : IAuthService
         if (!roleResult.Succeeded)
             return (false, roleResult.Errors.First().Description, null);
 
-        //await _signInManager.SignOutAsync();
         await _signInManager.SignInAsync(user, isPersistent: false);
 
         return (true, string.Empty, role);
     }
-
-
-    //public async Task<bool> LoginAsync(LoginViewModel model)
-    //{
-    //    var result = await _signInManager.PasswordSignInAsync(
-    //        model.Email,
-    //        model.Password,
-    //        isPersistent: false,
-    //        lockoutOnFailure: false);
-
-    //    return result.Succeeded;
-    //}
-
 
     public async Task<(bool Success, string Error)> LoginAsync(LoginViewModel model)
     {
@@ -133,6 +125,39 @@ public class AuthService : IAuthService
 
         await _signInManager.SignInAsync(user, isPersistent: false);
         return user;
+    }
+
+    public async Task<string> GenerateJwtTokenAsync(IdentityUser user)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.UserName)
+
+        };
+
+        foreach(var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("THIS_IS_MY_SUPER_SECRET_JWT_KEY_1234567890_ABCDEF_0987654321"
+));
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.Now.AddHours(1),
+            signingCredentials: creds
+            );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
 

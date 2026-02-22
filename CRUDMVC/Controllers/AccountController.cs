@@ -54,29 +54,7 @@ public class AccountController : Controller
             return RedirectToAction("List", "Students");
         return View();
     }
-    //[HttpPost]
-    //public async Task<IActionResult> Login(LoginViewModel model)
-    //{
 
-    //    if (!ModelState.IsValid)
-    //        return View(model);
-
-    //    var success = await _authService.LoginAsync(model);
-
-    //    if (!success)
-    //    {
-    //        ModelState.AddModelError("", "Invalid login attempt");
-    //        return View(model);
-    //    }
-
-    //    if (User.IsInRole("Admin"))
-    //        return RedirectToAction("List", "Students");
-
-    //    if (User.IsInRole("User"))
-    //        return RedirectToAction("Index", "User");
-
-    //    return RedirectToAction("Index", "HomePage");
-    //}
 
 
     [HttpPost]
@@ -158,6 +136,34 @@ public class AccountController : Controller
         return RedirectToAction("Index", "User");
 
 
+    }
+
+    [HttpPost]
+    [Route("api/login")]
+
+    public async Task<IActionResult> LoginApi([FromBody] LoginViewModel model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+
+        if(user == null)
+        {
+            return Unauthorized("User does not exist");
+        }
+
+        var valid = await _userManager.CheckPasswordAsync(user, model.Password);
+
+        if (!valid)
+        {
+            return Unauthorized("Invalid Credentials");
+        }
+
+
+        var token = await _authService.GenerateJwtTokenAsync(user);
+
+        return Ok(new
+        {
+            token = token
+        });
     }
 
 

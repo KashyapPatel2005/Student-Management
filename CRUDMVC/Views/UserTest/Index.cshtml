@@ -1,0 +1,33 @@
+﻿@model List<Test>
+@{
+    Layout = "_DashboardLayout";
+}
+
+<h3>Available Tests</h3>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@foreach (var test in Model)
+{
+    <div class="card p-3 mb-3 shadow-sm">
+        <h5>@test.Title</h5>
+
+        <a asp-action="TakeTest"
+           asp-route-id="@test.Id"
+           class="btn btn-primary">
+            Take Test
+        </a>
+    </div>
+}

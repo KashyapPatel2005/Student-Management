@@ -1,0 +1,121 @@
+﻿@model AddMultipleQuestionsViewModel
+@{
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">Add Multiple Questions</h3>
+
+        <div>
+            <button type="button"
+                    id="add-question"
+                    class="btn btn-outline-primary px-3">
+                + Add Question
+            </button>
+
+            <button type="submit"
+                    form="questions-form"
+                    class="btn btn-success ms-2 px-4">
+                Save All
+            </button>
+        </div>
+    </div>
+
+    <form id="questions-form"
+          asp-action="AddQuestion"
+          method="post">
+
+        <input type="hidden" asp-for="TestId" />
+
+        <div id="questions-container" class="row g-4">
+
+            @for (int i = 0; i < Model.Questions.Count; i++)
+            {
+                <div class="col-12 question-block">
+                    <div class="card border-0 shadow-sm rounded-4">
+
+                        <div class="card-body p-4">
+
+                            <!-- Question Title -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="fw-bold mb-0">
+                                    Question @(i + 1)
+                                </h5>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger remove-question">
+                                    Remove
+                                </button>
+                            </div>
+
+                            <!-- Question Text -->
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    Question Text
+                                </label>
+                                <input asp-for="Questions[i].Text"
+                                       class="form-control"
+                                       placeholder="Enter question text" />
+                            </div>
+
+                            <!-- Options Grid -->
+                            <div class="row g-3">
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        Option A
+                                    </label>
+                                    <input asp-for="Questions[i].OptionA"
+                                           class="form-control" />
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        Option B
+                                    </label>
+                                    <input asp-for="Questions[i].OptionB"
+                                           class="form-control" />
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        Option C
+                                    </label>
+                                    <input asp-for="Questions[i].OptionC"
+                                           class="form-control" />
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        Option D
+                                    </label>
+                                    <input asp-for="Questions[i].OptionD"
+                                           class="form-control" />
+                                </div>
+
+                            </div>
+
+                            <!-- Correct Answer -->
+                            <div class="mt-4">
+                                <label class="form-label fw-semibold">
+                                    Correct Answer
+                                </label>
+                                <select asp-for="Questions[i].CorrectAnswer"
+                                        asp-items="Html.GetEnumSelectList<AnswerOption>()"
+                                        class="form-select">
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </form>
+
+</div>

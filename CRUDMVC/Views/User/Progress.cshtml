@@ -1,12 +1,175 @@
-﻿@{
+﻿@* @{
     Layout = "_DashboardLayout";
 }
 
+<div class="container-fluid px-4 px-lg-5 py-4">
 
-<div>@ViewBag.title</div>
+    <div class="mb-4">
+        <h3 class="fw-bold mb-0">@ViewBag.title</h3>
+        <p class="text-muted mb-0">Track your learning performance.</p>
+    </div>
 
+    <div class="row g-4 mb-4">
 
-<div class="container-fluid">
-    <h2>@ViewBag.TotalLessons</h2>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted mb-2">Total Lessons</h6>
+                    <h2 class="fw-bold mb-0">
+                        @ViewBag.TotalLessons
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted mb-2">Completed</h6>
+                    <h2 class="fw-bold text-success mb-0">
+                        @ViewBag.Completed
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted mb-2">Pending</h6>
+                    <h2 class="fw-bold text-warning mb-0">
+                        @ViewBag.Pending
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center p-4">
+                    <h6 class="text-muted mb-2">Completion</h6>
+                    <h2 class="fw-bold text-primary mb-0">
+                        @ViewBag.Percentage%
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between mb-2">
+                <span class="fw-semibold">Overall Progress</span>
+                <span class="text-muted">@ViewBag.Percentage%</span>
+            </div>
+
+            <div class="progress rounded-pill" style="height: 20px;">
+                <div class="progress-bar bg-success"
+                     role="progressbar"
+                     style="width: @ViewBag.Percentage%;"
+                     aria-valuenow="@ViewBag.Percentage"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div> *@
+
+@{
+    Layout = "_DashboardLayout";
+}
+
+<div class="container-fluid px-4 px-lg-5 py-4">
+
+    <!-- Header -->
+    <div class="mb-4">
+        <h3 class="fw-bold mb-0">Progress Overview</h3>
+        <p class="text-muted">Visual representation of your learning progress.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Chart Card -->
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="fw-semibold mb-3">
+                        Lesson Completion Chart
+                    </h6>
+
+                    <canvas id="progressChart" height="250"></canvas>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+
+                    <h6 class="fw-semibold mb-3">
+                        Summary
+                    </h6>
+
+                    <p><strong>Total Lessons:</strong> @ViewBag.TotalLessons</p>
+                    <p class="text-success">
+                        <strong>Completed:</strong> @ViewBag.Completed
+                    </p>
+                    <p class="text-warning">
+                        <strong>Pending:</strong> @ViewBag.Pending
+                    </p>
+                    <p class="text-primary">
+                        <strong>Completion:</strong> @ViewBag.Percentage%
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+<!-- Chart Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('progressChart');
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Completed', 'Pending'],
+            datasets: [{
+                data: [
+                    @ViewBag.Completed,
+                    @ViewBag.Pending
+                ],
+                backgroundColor: [
+                    '#198754', // green
+                    '#ffc107'  // yellow
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+
+
+
 

@@ -1,25 +1,4 @@
-﻿@* @model List<Lesson>
-
-<h3>Manage Lessons</h3>
-
-<a asp-action="Create" class="btn btn-primary mb-3">
-    + Add Lesson
-</a>
-
-@foreach (var lesson in Model)
-{
-    <div class="card p-3 mb-3 shadow-sm">
-        <h5>@lesson.Title</h5>
-        <p>@lesson.Description</p>
-        <small class="text-muted">
-            Created: @lesson.CreatedAt.ToShortDateString()
-        </small>
-    </div>
-} *@
-
-
-
-@model List<Lesson>
+﻿@model List<Lesson>
 
 <div class="container py-5">
 

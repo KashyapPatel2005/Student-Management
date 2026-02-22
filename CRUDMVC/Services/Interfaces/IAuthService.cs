@@ -12,7 +12,6 @@ public interface IAuthService
     AuthenticationProperties GetGoogleAuthProperties(string redirectUrl);
 
     Task<IdentityUser?> HandleGoogleResponseAsync(HttpContext httpContext);
-
-    // Role-based redirect
-    //Task<string> GetRedirectUrlByRoleAsync(IdentityUser user);
+    
+    Task<string> GenerateJwtTokenAsync(IdentityUser user);
 }

@@ -1,7 +1,14 @@
 using CRUDMVC.Data;
-using Microsoft.AspNetCore.Identity;
+using CRUDMVC.Hubs;
 using CRUDMVC.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +22,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+var jwtkey = Encoding.UTF8.GetBytes("THIS_IS_MY_SUPER_SECRET_JWT_KEY_1234567890_ABCDEF_0987654321"
+);
+
 var google = builder.Configuration.GetSection("Authentication:Google");
 
 builder.Services.AddAuthentication()
@@ -22,9 +32,27 @@ builder.Services.AddAuthentication()
     {
         options.ClientId = google["ClientId"];
         options.ClientSecret = google["ClientSecret"];
+    })
+    .AddJwtBearer("Jwt", options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(jwtkey)
+        };
     });
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
+
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
 
 builder.Services.AddScoped<IStudentService, StudentService>();
@@ -38,6 +66,10 @@ builder.Services.AddScoped<ILessonService, LessonService>();
 
 builder.Services.AddScoped<IProgressRepository, ProgressRepository>();
 builder.Services.AddScoped<IProgressService, ProgressService>();
+
+builder.Services.AddScoped<ITestRepository, TestRepository>();
+builder.Services.AddScoped<ITestService, TestService>();
+
 
 
 
@@ -57,10 +89,14 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
+app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=HomePage}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapHub<UserHub>("/hubs/userCounts");
+app.MapHub<ChatHub>("/hubs/chat");
 
 using (var scope = app.Services.CreateScope())
 {

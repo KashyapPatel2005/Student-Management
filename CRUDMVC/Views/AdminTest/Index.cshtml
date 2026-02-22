@@ -1,0 +1,22 @@
+﻿@model List<Test>
+@{
+    Layout = "_DashboardLayout";
+}
+
+<h3>Manage Tests</h3>
+
+<a asp-action="Create" class="btn btn-primary mb-3">
+    Create New Test
+</a>
+
+@foreach (var test in Model)
+{
+    <div class="card p-3 mb-3 shadow-sm">
+        <h5>@test.Title</h5>
+        <a asp-action="AddQuestion"
+           asp-route-testId="@test.Id"
+           class="btn btn-sm btn-success">
+            Add Question
+        </a>
+    </div>
+}

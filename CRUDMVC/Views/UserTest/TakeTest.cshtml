@@ -1,0 +1,26 @@
+﻿@model Test
+@{
+    Layout = "_DashboardLayout";
+}
+
+<h3>@Model.Title</h3>
+
+<form asp-action="Submit" method="post">
+    <input type="hidden" name="testId" value="@Model.Id" />
+
+    @foreach (var q in Model.Questions)
+    {
+        <div class="card p-3 mb-3">
+            <h6>@q.Text</h6>
+
+            <input type="radio" name="q_@q.Id" value="A" required /> @q.OptionA <br />
+            <input type="radio" name="q_@q.Id" value="B" /> @q.OptionB <br />
+            <input type="radio" name="q_@q.Id" value="C" /> @q.OptionC <br />
+            <input type="radio" name="q_@q.Id" value="D" /> @q.OptionD <br />
+        </div>
+    }
+
+    <button type="submit" class="btn btn-success">
+        Submit
+    </button>
+</form>

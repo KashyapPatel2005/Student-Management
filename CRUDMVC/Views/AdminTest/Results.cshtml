@@ -1,0 +1,29 @@
+﻿@model List<TestAttempt>
+@{
+    Layout = "_DashboardLayout";
+}
+
+<h3>Test Results</h3>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>UserId</th>
+            <th>Test</th>
+            <th>Score</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserId</td>
+                <td>@item.Test.Title</td>
+                <td>@item.Score</td>
+                <td>@item.AttemptedAt</td>
+            </tr>
+        }
+    </tbody>
+</table>
