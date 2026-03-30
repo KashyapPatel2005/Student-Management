@@ -1,134 +1,73 @@
-﻿@* @model List<CRUDMVC.Models.Entities.Student>
-
-<div class="container-fluid bg-light min-vh-100 px-4 px-lg-5 py-5">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold mb-0 mx-auto">Students</h2>
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-0">
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 p-5">
-
-                    <thead class="table-dark">
-                        <tr>
-                            <th class="py-3">Name</th>
-                            <th class="py-3">Email</th>
-                            <th class="text-center py-3">Edit</th>
-                            <th class="text-center py-3">Delete</th>
-                            <th class="text-center py-3">View</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var student in Model)
-                        {
-                            <tr>
-                                <td class="py-3" style="padding:3rem;">@student.Name</td>
-                                <td class="py-3 text-muted" style="padding:3rem;">@student.Email</td>
-
-                                <td class="text-center py-3">
-                                    <a asp-controller="Students"
-                                       asp-action="Edit"
-                                       asp-route-id="@student.Id"
-                                       class="btn btn-outline-primary btn-sm px-3">
-                                        Edit
-                                    </a>
-                                </td>
-
-                                <td class="text-center py-3">
-                                    <form asp-controller="Students"
-                                          asp-action="Delete"
-                                          asp-route-id="@student.Id"
-                                          method="post"
-                                          class="d-inline">
-                                        <button type="submit"
-                                                class="btn btn-outline-danger btn-sm px-3">
-                                            Delete
-                                        </button>
-                                    </form>
-                                </td>
-
-                                <td class="text-center py-3">
-                                    <a asp-controller="Students"
-                                       asp-action="ViewStudent"
-                                       asp-route-id="@student.Id"
-                                       class="btn btn-outline-success btn-sm px-3">
-                                        View
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
-    </div>
-
-</div> *@
-
-
-
+﻿
 @model List<CRUDMVC.Models.Entities.Student>
 
-<div class="container-fluid bg-light min-vh-100 px-4 px-lg-5 py-5">
+<div style="width:60vw;padding: 0 1rem;">
 
-    <h2 class="fw-bold text-center mb-5">Students</h2>
-
-   
-       
-    <div class="search-container">
-        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-        <input type="text" id="liveSearch" class="form-control form-control-lg shadow-sm mb-3" placeholder="search by name or email..." />
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.75rem;">
+        <div>
+            <h2 style="font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); margin: 0 0 3px;">Students</h2>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 0;">@Model.Count total enrolled</p>
+        </div>
+        <a asp-controller="Students" asp-action="Add"
+           style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; background: var(--accent); color: #fff; border-radius: 9px; font-size: 13.5px; font-weight: 600; text-decoration: none; box-shadow: 0 0 12px var(--accent-glow); transition: filter 0.15s;"
+           onmouseover="this.style.filter='brightness(1.12)'"
+           onmouseout="this.style.filter='none'">
+            <i class="fa-solid fa-user-plus" style="font-size: 12px;"></i>
+            Add student
+        </a>
     </div>
 
-    <div class="student-stack">
+    <div style="position: relative; margin-bottom: 1.25rem;">
+        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 13px; pointer-events: none;"></i>
+        <input type="text" id="liveSearch"
+               placeholder="Search by name or email..."
+               style="width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px 10px 38px; font-size: 14px; color: var(--text); outline: none; transition: border-color 0.15s;"
+               onfocus="this.style.borderColor='var(--accent)'"
+               onblur="this.style.borderColor='var(--border)'" />
+    </div>
+
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;">
         @foreach (var student in Model)
         {
-            <div class="student-stack-card shadow-sm 
+            <div class="student-row"
                  data-name="@(student.Name?.ToLower() ?? "")"
                  data-email="@(student.Email?.ToLower() ?? "")"
-            ">
+                 style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); transition: background 0.15s;">
 
-                <div class="student-avatar">
+                <div style="width: 40px; height: 40px; background: var(--accent); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: #fff; box-shadow: 0 0 10px var(--accent-glow); flex-shrink: 0;">
                     @student.Name.Substring(0, 1).ToUpper()
                 </div>
 
-                <div class="student-info">
-                    <h5 class="mb-1 fw-semibold">@student.Name</h5>
-                    <p class="text-muted mb-0">@student.Email</p>
+                <div style="flex: 1; min-width: 0;">
+                    <p style="font-size: 14px; font-weight: 600; color: var(--text); margin: 0 0 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@student.Name</p>
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@student.Email</p>
                 </div>
 
-                <div class="student-actions">
-                    <a asp-controller="Students"
-                       asp-action="ViewStudent"
-                       asp-route-id="@student.Id"
-                       class="btn btn-outline-success btn-sm">
+                <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <a asp-controller="Students" asp-action="ViewStudent" asp-route-id="@student.Id"
+                       style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); text-decoration: none; transition: all 0.15s;"
+                       onmouseover="this.style.background='var(--surface-2)'; this.style.color='var(--text)'"
+                       onmouseout="this.style.background='transparent'; this.style.color='var(--text-muted)'">
+                        <i class="fa-solid fa-eye" style="font-size: 11px;"></i>
                         View
                     </a>
-
-                    <a asp-controller="Students"
-                       asp-action="Edit"
-                       asp-route-id="@student.Id"
-                       class="btn btn-outline-primary btn-sm">
+                    <a asp-controller="Students" asp-action="Edit" asp-route-id="@student.Id"
+                       style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; background: transparent; border: 1px solid var(--border); border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); text-decoration: none; transition: all 0.15s;"
+                       onmouseover="this.style.background='var(--surface-2)'; this.style.color='var(--text)'"
+                       onmouseout="this.style.background='transparent'; this.style.color='var(--text-muted)'">
+                        <i class="fa-solid fa-pen-to-square" style="font-size: 11px;"></i>
                         Edit
                     </a>
-
-                    <form asp-controller="Students"
-                           asp-action="Delete"
-                           asp-route-id="@student.Id"
-                           method="post"
-                           class="delete-form">
-
+                    <form asp-controller="Students" asp-action="Delete" asp-route-id="@student.Id" method="post" class="delete-form">
                         <button type="button"
-                                class="btn btn-outline-danger btn-sm delete-btn"
-                                data-student-name="@student.Name">
+                                class="delete-btn"
+                                data-student-name="@student.Name"
+                                style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; background: transparent; border: 1px solid transparent; border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s;"
+                                onmouseover="this.style.background='rgba(248,113,113,0.1)'; this.style.borderColor='rgba(248,113,113,0.3)'; this.style.color='var(--danger)'"
+                                onmouseout="this.style.background='transparent'; this.style.borderColor='transparent'; this.style.color='var(--text-muted)'">
+                            <i class="fa-solid fa-trash" style="font-size: 11px;"></i>
                             Delete
                         </button>
-
                     </form>
                 </div>
 
@@ -136,39 +75,42 @@
         }
     </div>
 
-    <p id="noResults" class="text-center text-muted mt-4 d-none">
+    <p id="noResults" class="d-none" style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 2rem;">
         No students found
     </p>
+
 </div>
 
 <div class="modal fade" id="deleteModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content rounded-4">
+        <div class="modal-content" style="background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden;">
 
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold text-danger">
-                    Confirm Delete
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-header" style="border-bottom: 1px solid var(--border); padding: 1.25rem 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 32px; height: 32px; background: rgba(248,113,113,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); font-size: 13px;"></i>
+                    </div>
+                    <h5 class="modal-title" style="font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); margin: 0;">Confirm delete</h5>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: invert(1) opacity(0.4);"></button>
             </div>
 
-            <div class="modal-body text-center">
-                <p id="deleteMessage" class="mb-0">
-                    Are you sure you want to delete this student?
-                </p>
+            <div class="modal-body" style="padding: 1.5rem; text-align: center;">
+                <p id="deleteMessage" style="font-size: 14px; color: var(--text-muted); margin: 0;"></p>
             </div>
 
-            <div class="modal-footer border-0 justify-content-center">
-                <button type="button"
-                        class="btn btn-secondary px-4"
-                        data-bs-dismiss="modal">
+            <div class="modal-footer" style="border-top: 1px solid var(--border); padding: 1rem 1.5rem; justify-content: center; gap: 10px;">
+                <button type="button" data-bs-dismiss="modal"
+                        style="padding: 9px 22px; background: transparent; border: 1px solid var(--border); border-radius: 9px; font-size: 13.5px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: all 0.15s;"
+                        onmouseover="this.style.background='var(--surface-2)'"
+                        onmouseout="this.style.background='transparent'">
                     Cancel
                 </button>
-
-                <button type="button"
-                        class="btn btn-danger px-4"
-                        id="confirmDelete">
-                    Yes, Delete
+                <button type="button" id="confirmDelete"
+                        style="padding: 9px 22px; background: var(--danger); border: none; border-radius: 9px; font-size: 13.5px; font-weight: 600; color: #fff; cursor: pointer; transition: filter 0.15s;"
+                        onmouseover="this.style.filter='brightness(1.1)'"
+                        onmouseout="this.style.filter='none'">
+                    Yes, delete
                 </button>
             </div>
 
@@ -176,14 +118,11 @@
     </div>
 </div>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
         const searchInput = document.getElementById("liveSearch");
-        const cards = document.querySelectorAll(".student-stack-card");
+        const rows = document.querySelectorAll(".student-row");
         const noResults = document.getElementById("noResults");
-
         const deleteButtons = document.querySelectorAll(".delete-btn");
         const deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
         const confirmDeleteBtn = document.getElementById("confirmDelete");
@@ -191,43 +130,35 @@
 
         let formToSubmit = null;
 
+        rows.forEach(row => {
+            row.addEventListener("mouseenter", () => row.style.background = "var(--surface-2)");
+            row.addEventListener("mouseleave", () => row.style.background = "transparent");
+        });
+
         searchInput.addEventListener("input", function () {
             const value = this.value.toLowerCase();
             let visibleCount = 0;
-
-            cards.forEach(card => {
-                const name = card.dataset.name || "";
-                const email = card.dataset.email || "";
-
-                if (name.includes(value) || email.includes(value)) {
-                    card.style.display = "flex";
-                    visibleCount++;
-                } else {
-                    card.style.display = "none";
-                }
+            rows.forEach(row => {
+                const name = row.dataset.name || "";
+                const email = row.dataset.email || "";
+                const match = name.includes(value) || email.includes(value);
+                row.style.display = match ? "flex" : "none";
+                if (match) visibleCount++;
             });
-
             noResults.classList.toggle("d-none", visibleCount !== 0);
         });
 
         deleteButtons.forEach(button => {
             button.addEventListener("click", function () {
                 formToSubmit = this.closest("form");
-
-                const studentName = this.dataset.studentName || "this student";
-                deleteMessage.textContent =
-                    `Are you sure you want to delete ${studentName}?`;
-
+                const name = this.dataset.studentName || "this student";
+                deleteMessage.textContent = `Are you sure you want to delete ${name}? This action cannot be undone.`;
                 deleteModal.show();
             });
         });
 
         confirmDeleteBtn.addEventListener("click", function () {
-            if (formToSubmit) {
-                formToSubmit.submit();
-            }
+            if (formToSubmit) formToSubmit.submit();
         });
-
     });
 </script>
-

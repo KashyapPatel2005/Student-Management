@@ -1,175 +1,298 @@
-﻿@* @{
-    Layout = "_DashboardLayout";
-}
-
-<div class="container-fluid px-4 px-lg-5 py-4">
-
-    <div class="mb-4">
-        <h3 class="fw-bold mb-0">@ViewBag.title</h3>
-        <p class="text-muted mb-0">Track your learning performance.</p>
-    </div>
-
-    <div class="row g-4 mb-4">
-
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body text-center p-4">
-                    <h6 class="text-muted mb-2">Total Lessons</h6>
-                    <h2 class="fw-bold mb-0">
-                        @ViewBag.TotalLessons
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body text-center p-4">
-                    <h6 class="text-muted mb-2">Completed</h6>
-                    <h2 class="fw-bold text-success mb-0">
-                        @ViewBag.Completed
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body text-center p-4">
-                    <h6 class="text-muted mb-2">Pending</h6>
-                    <h2 class="fw-bold text-warning mb-0">
-                        @ViewBag.Pending
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-6 col-lg-3">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body text-center p-4">
-                    <h6 class="text-muted mb-2">Completion</h6>
-                    <h2 class="fw-bold text-primary mb-0">
-                        @ViewBag.Percentage%
-                    </h2>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4">
-
-            <div class="d-flex justify-content-between mb-2">
-                <span class="fw-semibold">Overall Progress</span>
-                <span class="text-muted">@ViewBag.Percentage%</span>
-            </div>
-
-            <div class="progress rounded-pill" style="height: 20px;">
-                <div class="progress-bar bg-success"
-                     role="progressbar"
-                     style="width: @ViewBag.Percentage%;"
-                     aria-valuenow="@ViewBag.Percentage"
-                     aria-valuemin="0"
-                     aria-valuemax="100">
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div> *@
-
+﻿
 @{
     Layout = "_DashboardLayout";
 }
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-    <!-- Header -->
-    <div class="mb-4">
-        <h3 class="fw-bold mb-0">Progress Overview</h3>
-        <p class="text-muted">Visual representation of your learning progress.</p>
-    </div>
+    :root {
+        --bg-card: #111111;
+        --bg-card-hover: #161616;
+        --border: rgba(255,255,255,0.06);
+        --accent: #7DF9C0;
+        --accent-dim: rgba(125, 249, 192, 0.12);
+        --accent-glow: rgba(125, 249, 192, 0.25);
+        --warning: #F5C542;
+        --warning-dim: rgba(245, 197, 66, 0.1);
+        --text-primary: #F0F0F0;
+        --text-muted: #666;
+        --text-secondary: #999;
+    }
 
-    <div class="row g-4">
+    .progress-wrapper {
+        font-family: 'DM Sans', sans-serif;
+        padding: 2.5rem 2rem;
+        margin: 0 auto;
+    }
 
-        <!-- Chart Card -->
-        <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
+        .progress-wrapper h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+            margin: 0 0 0.3rem;
+        }
 
-                    <h6 class="fw-semibold mb-3">
-                        Lesson Completion Chart
-                    </h6>
+        .progress-wrapper .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0 0 2rem;
+        }
 
-                    <canvas id="progressChart" height="250"></canvas>
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+    }
 
+    @@media (max-width: 768px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .card-dark {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1.8rem;
+        transition: border-color 0.25s ease;
+    }
+
+        .card-dark:hover {
+            border-color: rgba(255,255,255,0.1);
+        }
+
+    .card-label {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 1.4rem;
+    }
+
+    .chart-container {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .chart-center-label {
+        position: absolute;
+        text-align: center;
+        pointer-events: none;
+    }
+
+        .chart-center-label .pct {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .chart-center-label .pct-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+    .stat-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+    }
+
+        .stat-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .stat-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .stat-value {
+        font-family: 'Syne', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+        .stat-value.accent {
+            color: var(--accent);
+        }
+
+        .stat-value.warning {
+            color: var(--warning);
+        }
+
+    .completion-bar-wrap {
+        margin-top: 1.5rem;
+        padding-top: 1.2rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .completion-bar-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        margin-bottom: 0.6rem;
+    }
+
+        .completion-bar-header span:last-child {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+    .bar-track {
+        background: rgba(255,255,255,0.05);
+        border-radius: 100px;
+        height: 6px;
+        overflow: hidden;
+    }
+
+    .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), #5be6a8);
+        border-radius: 100px;
+        transition: width 1.2s ease;
+        box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    @@keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card-dark {
+        animation: fadeSlide 0.4s ease both;
+    }
+
+        .card-dark:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+</style>
+
+<div class="progress-wrapper" style="width:60vw;">
+    <h1>Progress Overview</h1>
+    <p class="subtitle">Visual representation of your learning progress</p>
+
+    <div class="grid">
+        <div class="card-dark">
+            <p class="card-label">Lesson Completion</p>
+            <div class="chart-container">
+                <canvas id="progressChart" width="220" height="220" style="max-width:220px;"></canvas>
+                <div class="chart-center-label">
+                    <div class="pct">@ViewBag.Percentage<span style="font-size:1rem;">%</span></div>
+                    <div class="pct-sub">complete</div>
                 </div>
             </div>
         </div>
 
-        <!-- Summary Card -->
-        <div class="col-12 col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
+        <div class="card-dark">
+            <p class="card-label">Summary</p>
+            <div class="stat-list">
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <span class="stat-dot" style="background: rgba(255,255,255,0.2);"></span>
+                        Total Lessons
+                    </span>
+                    <span class="stat-value">@ViewBag.TotalLessons</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <span class="stat-dot" style="background: #7DF9C0;box-shadow:0 0 6px rgba(125,249,192,0.5);"></span>
+                        Completed
+                    </span>
+                    <span class="stat-value accent">@ViewBag.Completed</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">
+                        <span class="stat-dot" style="background: #F5C542;"></span>
+                        Pending
+                    </span>
+                    <span class="stat-value warning">@ViewBag.Pending</span>
+                </div>
+            </div>
 
-                    <h6 class="fw-semibold mb-3">
-                        Summary
-                    </h6>
-
-                    <p><strong>Total Lessons:</strong> @ViewBag.TotalLessons</p>
-                    <p class="text-success">
-                        <strong>Completed:</strong> @ViewBag.Completed
-                    </p>
-                    <p class="text-warning">
-                        <strong>Pending:</strong> @ViewBag.Pending
-                    </p>
-                    <p class="text-primary">
-                        <strong>Completion:</strong> @ViewBag.Percentage%
-                    </p>
-
+            <div class="completion-bar-wrap">
+                <div class="completion-bar-header">
+                    <span>Overall progress</span>
+                    <span>@ViewBag.Percentage%</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width: @ViewBag.Percentage%"></div>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
-<!-- Chart Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <script>
     const ctx = document.getElementById('progressChart');
-
     new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Completed', 'Pending'],
             datasets: [{
-                data: [
-                    @ViewBag.Completed,
-                    @ViewBag.Pending
-                ],
-                backgroundColor: [
-                    '#198754', // green
-                    '#ffc107'  // yellow
-                ],
-                borderWidth: 0
+                data: [@ViewBag.Completed, @ViewBag.Pending],
+                backgroundColor: ['#7DF9C0', '#F5C542'],
+                borderWidth: 0,
+                hoverOffset: 6
             }]
         },
         options: {
-            responsive: true,
+            responsive: false,
+            cutout: '78%',
             plugins: {
-                legend: {
-                    position: 'bottom'
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#1a1a1a',
+                    borderColor: 'rgba(255,255,255,0.08)',
+                    borderWidth: 1,
+                    titleColor: '#f0f0f0',
+                    bodyColor: '#999',
+                    padding: 10,
+                    cornerRadius: 10
                 }
             }
         }
     });
 </script>
-
-
-
-

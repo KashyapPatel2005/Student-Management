@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
 namespace CRUDMVC.Hubs
 {
@@ -9,18 +8,17 @@ namespace CRUDMVC.Hubs
     {
         public override async Task OnConnectedAsync()
         {
+            Console.WriteLine("connected");
             await Groups.AddToGroupAsync(Context.ConnectionId, "GlobalRoom");
             await base.OnConnectedAsync();
         }
 
         public async Task SendMessage(string message)
         {
-            var username = Context.User.IsInRole("Admin")
-                ? "Admin"
-                : Context.User.Identity.Name;
 
+            var username = Context.User.IsInRole("Admin") ? "Admin" : Context.User.Identity.Name;
             await Clients.Group("GlobalRoom")
-                .SendAsync("ReceiveMessage", username, message);
+                 .SendAsync("ReceiveMessage", username, message);
         }
     }
 }

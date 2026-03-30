@@ -3,70 +3,274 @@
     Layout = "_DashboardLayout";
 }
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-8 col-xl-7">
+    :root {
+        --bg-card: #111111;
+        --border: rgba(255,255,255,0.06);
+        --border-focus: rgba(125, 249, 192, 0.4);
+        --accent: #7DF9C0;
+        --accent-dim: rgba(125, 249, 192, 0.12);
+        --accent-glow: rgba(125, 249, 192, 0.25);
+        --text-primary: #F0F0F0;
+        --text-muted: #666;
+        --text-secondary: #999;
+        --input-bg: #0e0e0e;
+    }
 
-            <form asp-action="AddAchievement"
-                  method="post"
-                  enctype="multipart/form-data"
-                  class="card border-0 shadow-sm rounded-4">
+    .form-wrapper {
+        font-family: 'DM Sans', sans-serif;
+        padding: 2.5rem 2rem;
+        margin: 0 auto;
+        animation: fadeSlide 0.4s ease both;
+    }
 
-                <div class="card-body p-4 p-lg-5">
-                    <div class="d-flex align-items-center justify-content-between mb-4  ">
-                        <h3 class="fw-light">Add Achievement</h3>
-                    </div>
+    @@keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Title</label>
-                        <input asp-for="Title"
-                               class="form-control"
-                               placeholder="Achievement title" />
-                        <span asp-validation-for="Title" class="text-danger small"></span>
-                    </div>
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Description</label>
-                        <textarea asp-for="Description"
-                                  rows="4"
-                                  class="form-control"
-                                  placeholder="Describe your achievement"></textarea>
-                    </div>
+    .form-header {
+        margin-bottom: 2.2rem;
+    }
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Achieved On</label>
-                        <input asp-for="AchievedOn"
-                               type="date"
-                               class="form-control" />
-                    </div>
+        .form-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+            margin: 0 0 0.3rem;
+        }
 
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">Upload Certificate</label>
-                        <input asp-for="CertificateFile"
-                               type="file"
-                               class="form-control" />
-                        <div class="form-text">
-                            Accepted formats: PDF, JPG, PNG
-                        </div>
-                    </div>
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
 
-                    <div class="d-flex gap-2">
-                        <button type="submit"
-                                class="btn btn-success px-4">
-                            Save
-                        </button>
+    .form-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.2rem 2.4rem;
+    }
 
-                        <a asp-action="Achievements"
-                           class="btn btn-outline-secondary px-4">
-                            Cancel
-                        </a>
-                    </div>
+    .field {
+        margin-bottom: 1.4rem;
+    }
 
-                </div>
-            </form>
+        .field label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'Syne', sans-serif;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
 
-        </div>
+        .field input,
+        .field textarea {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+        }
+
+            .field input::placeholder,
+            .field textarea::placeholder {
+                color: var(--text-muted);
+            }
+
+            .field input:focus,
+            .field textarea:focus {
+                border-color: var(--border-focus);
+                box-shadow: 0 0 0 3px rgba(125, 249, 192, 0.08);
+            }
+
+        .field textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .field input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(0.4);
+            cursor: pointer;
+        }
+
+    .file-upload-area {
+        background: var(--input-bg);
+        border: 1px dashed rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 1.4rem 1rem;
+        text-align: center;
+        transition: border-color 0.2s ease;
+        cursor: pointer;
+        position: relative;
+    }
+
+        .file-upload-area:hover {
+            border-color: rgba(125,249,192,0.3);
+        }
+
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+    .file-upload-icon {
+        font-size: 1.4rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+    }
+
+    .file-upload-text {
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .file-upload-hint {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 0.3rem;
+    }
+
+    .validation-msg {
+        font-size: 0.75rem;
+        color: #FF6B6B;
+        margin-top: 0.35rem;
+        display: block;
+    }
+
+    .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 1.8rem 0;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .btn-save {
+        background: var(--accent);
+        color: #0a0a0a;
+        border: none;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 0.65rem 1.6rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        letter-spacing: 0.02em;
+        box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+        .btn-save:hover {
+            background: #95ffd0;
+            box-shadow: 0 0 28px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+    .btn-cancel {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 500;
+        padding: 0.65rem 1.4rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        letter-spacing: 0.02em;
+    }
+
+        .btn-cancel:hover {
+            border-color: rgba(255,255,255,0.15);
+            color: var(--text-primary);
+        }
+</style>
+
+<div class="form-wrapper" style="width:60vw;height:100vh;">
+    <div class="form-header">
+        <h1>Add Achievement</h1>
+        <p>Record a new milestone or certification</p>
     </div>
 
+    <form asp-action="AddAchievement" method="post" enctype="multipart/form-data">
+        <div class="form-card">
+
+            <div class="field">
+                <label>Title</label>
+                <input asp-for="Title" placeholder="Achievement title" />
+                <span asp-validation-for="Title" class="validation-msg"></span>
+            </div>
+
+            <div class="field">
+                <label>Description</label>
+                <textarea asp-for="Description" placeholder="Describe your achievement"></textarea>
+            </div>
+
+            <div class="field">
+                <label>Achieved On</label>
+                <input asp-for="AchievedOn" type="date" />
+            </div>
+
+            <div class="field">
+                <label>Upload Certificate</label>
+                <div class="file-upload-area">
+                    <input asp-for="CertificateFile" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+                    <div class="file-upload-icon">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <p class="file-upload-text">Click to upload your certificate</p>
+                    <p class="file-upload-hint">PDF, JPG, PNG accepted</p>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-check"></i> Save Achievement
+                </button>
+                <a asp-action="Achievements" class="btn-cancel">
+                    Cancel
+                </a>
+            </div>
+
+        </div>
+    </form>
 </div>

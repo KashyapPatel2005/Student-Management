@@ -1,69 +1,337 @@
-﻿@{
+﻿
+@{
     Layout = "_DashboardLayout";
 }
-
 @model List<Lesson>
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-    <div class="mb-4 ">
-      <P>Complete you Lessons/Tasks</P>
-    </div>
+    :root {
+        --bg-card: #111111;
+        --bg-card-hover: #161616;
+        --border: rgba(255,255,255,0.06);
+        --border-hover: rgba(255,255,255,0.12);
+        --accent: #7DF9C0;
+        --accent-dim: rgba(125, 249, 192, 0.12);
+        --accent-glow: rgba(125, 249, 192, 0.25);
+        --warning: #F5C542;
+        --warning-dim: rgba(245, 197, 66, 0.1);
+        --text-primary: #F0F0F0;
+        --text-muted: #666;
+        --text-secondary: #999;
+    }
 
-    <div class="row g-3">
+    .lessons-wrapper {
+        font-family: 'DM Sans', sans-serif;
+        padding: 2.5rem 2rem;
+        margin: 0 auto;
+    }
 
-        @foreach (var lesson in Model)
-        {
-            <div class="col-12">
+    .lessons-header h1 {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        font-size: 2rem;
+        color: var(--text-primary);
+        letter-spacing: -0.03em;
+        margin: 0 0 0.3rem;
+    }
 
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4">
+    .lessons-header p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        margin: 0;
+    }
 
-                        <h5 class="fw-bold mb-2">
-                            @lesson.Title
-                        </h5>
+    .progress-bar-wrap {
+        margin-top: 1.2rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 100px;
+        height: 4px;
+        overflow: hidden;
+    }
 
-                        <p class="text-muted mb-3">
-                            @lesson.Description
-                        </p>
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), #5be6a8);
+        border-radius: 100px;
+        transition: width 1s ease;
+    }
 
-                        <div class="d-flex justify-content-between align-items-center">
+    .progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+    }
 
-                            @if (ViewBag.Completed.Contains(lesson.Id))
-                            {
-                                <span class="text-success fw-bold d-flex align-items-center gap-2">
-                                    <i class="fa-solid fa-circle-check fa-lg"></i>
-                                    <span>Completed</span>
-                                </span>
-                            }
-                            else
-                            {
-                                <span class="text-warning fw-semibold d-flex align-items-center gap-2">
-                                    <i class="fa-regular fa-clock fa-lg"></i>
-                                    Pending
-                                </span>
-                            }
+    .lesson-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 2rem;
+    }
 
-                            @if (!ViewBag.Completed.Contains(lesson.Id))
-                            {
-                                <form asp-action="CompleteLesson" method="post" class="mb-0">
-                                    <input type="hidden" name="lessonId" value="@lesson.Id" />
-                                    <button type="submit" class="btn btn-outline-primary btn-sm px-4 rounded-pill shadow-sm transition-button">
-                                        <i class="fa-solid fa-check me-1"></i> Mark as Completed
-                                    </button>
-                                </form>
-                            }
+    .lesson-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 1.4rem 1.6rem;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeSlide 0.4s ease both;
+    }
 
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
+        .lesson-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 0% 50%, rgba(125,249,192,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
+        .lesson-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+            .lesson-card:hover::before {
+                opacity: 1;
+            }
+
+        .lesson-card.completed {
+            background: linear-gradient(135deg, rgba(125,249,192,0.04) 0%, var(--bg-card) 100%);
+            border-color: rgba(125,249,192,0.15);
+        }
+
+        .lesson-card:nth-child(1) {
+            animation-delay: 0.00s;
+        }
+
+        .lesson-card:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .lesson-card:nth-child(3) {
+            animation-delay: 0.09s;
+        }
+
+        .lesson-card:nth-child(4) {
+            animation-delay: 0.14s;
+        }
+
+        .lesson-card:nth-child(5) {
+            animation-delay: 0.18s;
+        }
+
+        .lesson-card:nth-child(6) {
+            animation-delay: 0.23s;
+        }
+
+        .lesson-card:nth-child(7) {
+            animation-delay: 0.27s;
+        }
+
+        .lesson-card:nth-child(8) {
+            animation-delay: 0.32s;
+        }
+
+        .lesson-card:nth-child(9) {
+            animation-delay: 0.36s;
+        }
+
+        .lesson-card:nth-child(10) {
+            animation-delay: 0.41s;
+        }
+
+    @@keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .lesson-index {
+        font-family: 'Syne', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        width: 28px;
+        flex-shrink: 0;
+        letter-spacing: 0.05em;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+        .status-dot.done {
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .status-dot.pending {
+            background: transparent;
+            border: 2px solid var(--text-muted);
+        }
+
+    .lesson-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .lesson-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        margin: 0 0 0.25rem;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .lesson-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4;
+    }
+
+    .lesson-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-shrink: 0;
+    }
+
+    .badge-status {
+        font-size: 0.72rem;
+        font-weight: 500;
+        padding: 0.3rem 0.75rem;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .badge-completed {
+        background: var(--accent-dim);
+        color: var(--accent);
+        border: 1px solid rgba(125,249,192,0.2);
+    }
+
+    .badge-pending {
+        background: var(--warning-dim);
+        color: var(--warning);
+        border: 1px solid rgba(245,197,66,0.15);
+    }
+
+    .btn-complete {
+        background: transparent;
+        border: 1px solid rgba(255,255,255,0.1);
+        color: var(--text-secondary);
+        font-size: 0.75rem;
+        font-weight: 500;
+        font-family: 'DM Sans', sans-serif;
+        padding: 0.4rem 1rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+        letter-spacing: 0.02em;
+    }
+
+        .btn-complete:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #0a0a0a;
+            font-weight: 600;
+            box-shadow: 0 0 16px var(--accent-glow);
+        }
+
+</style>
+
+<div class="lessons-wrapper" style="width:60vw;">
+    <div class="lessons-header">
+        <h1>Your Lessons</h1>
+        <p>Complete your tasks to track your progress</p>
+        @{
+            int total = Model.Count;
+            int done = 0;
+            foreach (var l in Model)
+            {
+                if (((IEnumerable<int>)ViewBag.Completed).Contains(l.Id)) done++;
+            }
+            double pct = total > 0 ? (done * 100.0 / total) : 0;
+        }
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="width: @pct%"></div>
+        </div>
+        <div class="progress-label">
+            <span>@done of @total completed</span>
+            <span>@((int)pct)%</span>
+        </div>
     </div>
 
+    <div class="lesson-list">
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            var lesson = Model[i];
+            bool isCompleted = ((IEnumerable<int>)ViewBag.Completed).Contains(lesson.Id);
+
+            <div class="lesson-card @(isCompleted ? "completed" : "")">
+                <span class="lesson-index">@((i + 1).ToString("D2"))</span>
+                <span class="status-dot @(isCompleted ? "done" : "pending")"></span>
+                <div class="lesson-content">
+                    <p class="lesson-title">@lesson.Title</p>
+                    <p class="lesson-desc">@lesson.Description</p>
+                </div>
+                <div class="lesson-right">
+                    @if (isCompleted)
+                    {
+                        <span class="badge-status badge-completed">
+                            <i class="fa-solid fa-check"></i> Done
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge-status badge-pending">
+                            <i class="fa-regular fa-clock"></i> Pending
+                        </span>
+                        <form asp-action="CompleteLesson" method="post" style="margin:0">
+                            <input type="hidden" name="lessonId" value="@lesson.Id" />
+                            <button type="submit" class="btn-complete">
+                                <i class="fa-solid fa-check"></i> Mark done
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    </div>
 </div>
-
-

@@ -11,204 +11,424 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Student Portal</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            background-color: #f4f6f9;
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161d;
+            --surface-2: #1b1f29;
+            --border: rgba(255,255,255,0.07);
+            --accent: #4f8ef7;
+            --accent-glow: rgba(79,142,247,0.18);
+            --accent-soft: rgba(79,142,247,0.10);
+            --text: #e8eaf0;
+            --text-muted: #6b7280;
+            --danger: #f87171;
+            --success: #34d399;
+            --sidebar-w: 230px;
+            --nav-h: 60px;
         }
 
-        .dashboard-sidebar {
-            background: #212529;
-            min-height: 100vh;
-            padding: 20px 10px;
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-            .dashboard-sidebar .nav-link {
-                color: #ced4da;
-                padding: 14px 16px;
-                border-radius: 10px;
-                margin-bottom: 8px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                font-size: 15px;
-                transition: all 0.3s ease;
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14.5px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .sp-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--nav-h);
+            background: rgba(13,15,20,0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            z-index: 1000;
+            gap: 16px;
+        }
+
+        .sp-nav__brand {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sp-nav__brand-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            color: #fff;
+            box-shadow: 0 0 12px var(--accent-glow);
+            flex-shrink: 0;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 5px 12px 5px 5px;
+            border-radius: 50px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.18s ease;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+            .user-pill:hover {
+                border-color: rgba(255,255,255,0.14);
+                background: #222636;
+                color: var(--text);
             }
 
-                .dashboard-sidebar .nav-link i {
-                    width: 22px;
-                    text-align: center;
-                    font-size: 16px;
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .dropdown-menu {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+            padding: 6px;
+            min-width: 180px;
+        }
+
+        .dropdown-item {
+            color: var(--text-muted);
+            border-radius: 7px;
+            padding: 8px 12px;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.18s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+            .dropdown-item:hover {
+                background: var(--surface-2);
+                color: var(--text);
+            }
+
+            .dropdown-item.text-danger {
+                color: var(--danger) !important;
+            }
+
+                .dropdown-item.text-danger:hover {
+                    background: rgba(248,113,113,0.1);
                 }
 
-                .dashboard-sidebar .nav-link:hover {
-                    background-color: #343a40;
-                    color: #ffffff;
-                    transform: translateX(6px);
+        .dropdown-divider {
+            border-color: var(--border);
+            margin: 4px 0;
+        }
+
+        .sp-sidebar {
+            position: fixed;
+            top: var(--nav-h);
+            left: 0;
+            width: var(--sidebar-w);
+            height: calc(100vh - var(--nav-h));
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            z-index: 900;
+        }
+
+        .sidebar-section-label {
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 8px;
+            margin: 4px 0 6px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+            .sidebar-nav a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 12px;
+                border-radius: 8px;
+                color: var(--text-muted);
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 13.5px;
+                transition: all 0.18s ease;
+            }
+
+                .sidebar-nav a:hover {
+                    background: var(--surface-2);
+                    color: var(--text);
                 }
 
-                .dashboard-sidebar .nav-link.active {
-                    background-color: #0d6efd;
-                    color: #ffffff;
-                    font-weight: 600;
-                    box-shadow: 0 6px 14px rgba(13, 110, 253, 0.4);
+                .sidebar-nav a.active {
+                    background: var(--accent-soft);
+                    color: var(--accent);
+                    border: 1px solid rgba(79,142,247,0.2);
                 }
 
-        .dashboard-content {
-            padding: 30px;
+        .nav-icon {
+            width: 18px;
+            text-align: center;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-divider {
+            border-color: var(--border);
+            margin: 12px 0;
+        }
+
+        .sp-main {
+            margin-left: var(--sidebar-w);
+            padding: 28px 32px;
+            padding-top: calc(var(--nav-h) + 28px);
+            min-height: 100vh;
+        }
+
+        .alert-success {
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.25);
+            color: var(--success);
+            border-radius: 10px;
+        }
+
+        .btn-close {
+            filter: invert(1) opacity(0.5);
+        }
+
+        .sp-footer {
+            border-top: 1px solid var(--border);
+            padding: 20px 32px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-left: var(--sidebar-w);
         }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-dark bg-dark border-bottom px-4 py-3">
-        <span class="navbar-brand fw-semibold">Student Portal</span>
+    <nav class="sp-nav">
+        <a href="/" class="sp-nav__brand">
+            <div class="sp-nav__brand-icon">
+                <i class="fa-solid fa-graduation-cap"></i>
+            </div>
+            Student Portal
+        </a>
 
-        <div class="dropdown ms-auto">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-               id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-
-                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"
-                     style="width: 35px; height: 35px;">
-                    <span class="fw-bold text-white small">
+        <div class="ms-auto">
+            <div class="dropdown">
+                <a href="#" class="user-pill dropdown-toggle"
+                   id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-avatar">
                         @User.Identity?.Name?.ToUpper().FirstOrDefault()
-                    </span>
-                </div>
-
-                <span class="fw-semibold d-none d-sm-inline">@User.Identity.Name</span>
-            </a>
-
-            <ul class="dropdown-menu dropdown-menu-end shadow-sm mt-2" aria-labelledby="userDropdown">
-                <li>
-                    <a class="dropdown-item py-2" asp-controller="User" asp-action="Index">
-                        <i class="fa-solid fa-user-gear me-2 text-muted"></i> My Profile
-                    </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="px-2">
-                        <button type="submit" class="dropdown-item rounded text-danger py-2">
-                            <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
-                        </button>
-                    </form>
-                </li>
-            </ul>
+                    </div>
+                    <span style="font-size:13px; font-weight:500;" class="d-none d-sm-inline">@User.Identity?.Name</span>
+                    <i class="fa-solid fa-chevron-down" style="font-size:10px; color: var(--text-muted);"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <span class="dropdown-item" style="color:var(--text-muted); font-size:12px; cursor:default;">
+                            Signed in as <strong style="color:var(--text);">@User.Identity?.Name</strong>
+                        </span>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    @if (isUser)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-controller="User" asp-action="Index">
+                                <i class="fa-solid fa-user-gear"></i> My Profile
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                    }
+                    <li>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="dropdown-item text-danger">
+                                <i class="fa-solid fa-right-from-bracket"></i> Sign out
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container-fluid">
-        <div class="row">
+    <aside class="sp-sidebar">
 
-            <aside class="col-md-2 dashboard-sidebar">
+        @if (isUser)
+        {
+            <p class="sidebar-section-label">My Learning</p>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="@(currentController == "User" && currentAction == "Index" ? "active" : "")"
+                       asp-controller="User" asp-action="Index">
+                        <span class="nav-icon"><i class="fa-solid fa-user"></i></span>
+                        My Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="@(currentAction == "Lessons" ? "active" : "")"
+                       asp-controller="User" asp-action="Lessons">
+                        <span class="nav-icon"><i class="fa-solid fa-book-open"></i></span>
+                        Lessons
+                    </a>
+                </li>
+                <li>
+                    <a class="@(currentAction == "Progress" ? "active" : "")"
+                       asp-controller="User" asp-action="Progress">
+                        <span class="nav-icon"><i class="fa-solid fa-chart-line"></i></span>
+                        My Progress
+                    </a>
+                </li>
+                <li>
+                    <a class="@(currentAction == "Achievements" ? "active" : "")"
+                       asp-controller="User" asp-action="Achievements">
+                        <span class="nav-icon"><i class="fa-solid fa-award"></i></span>
+                        Achievements
+                    </a>
+                </li>
+            </ul>
 
-                <ul class="nav flex-column">
+            <hr class="sidebar-divider">
 
-                    @if (isUser)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "Index" ? "active" : "")"
-                               asp-controller="User" asp-action="Index">
-                                <i class="fa-solid fa-user text-light"></i>
-                                <span class="ms-2">My Profile</span>
-                            </a>
-                        </li>
+            <p class="sidebar-section-label">Communication</p>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="@(currentController == "Chat" ? "active" : "")"
+                       asp-controller="Chat" asp-action="Index">
+                        <span class="nav-icon"><i class="fa-solid fa-comments"></i></span>
+                        Chat Room
+                    </a>
+                </li>
+                <li>
+                    <a class="@(currentAction == "Notifications" ? "active" : "")"
+                       asp-controller="UserDashboard" asp-action="Notifications">
+                        <span class="nav-icon"><i class="fa-solid fa-bell"></i></span>
+                        Notifications
+                    </a>
+                </li>
+            </ul>
 
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "Lessons" ? "active" : "")"
-                               asp-controller="User" asp-action="Lessons">
-                                <i class="fa-solid fa-book-open text-light"></i>
-                                <span class="ms-2">Lessons</span>
-                            </a>
-                        </li>
+            <hr class="sidebar-divider">
 
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "Progress" ? "active" : "")"
-                               asp-controller="User" asp-action="Progress">
-                                <i class="fa-solid fa-chart-line text-light"></i>
-                                <span class="ms-2">My Progress</span>
-                            </a>
-                        </li>
+            <p class="sidebar-section-label">Other</p>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="@(currentAction == "ExamForm" ? "active" : "")"
+                       asp-controller="ExamForm" asp-action="Form">
+                        <span class="nav-icon"><i class="fa-solid fa-file-pen"></i></span>
+                        Exam Form
+                    </a>
+                </li>
+                <li>
+                    <a class="@(currentAction == "History" ? "active" : "")"
+                       asp-controller="UserDashboard" asp-action="History">
+                        <span class="nav-icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                        History
+                    </a>
+                </li>
+            </ul>
+        }
 
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "Achievements" ? "active" : "")"
-                               asp-controller="User" asp-action="Achievements">
-                                <i class="fa-solid fa-award text-light"></i>
-                                <span class="ms-2">Achievements / Certificates</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Chat"
-                               asp-action="Index">
-                                <i class="fa-solid fa-comments"></i>
-                                <span class="ms-2">Global Chat</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "ExamForm" ? "active":"")"
-                            asp-controller="ExamForm" asp-action="Form" >
-                                <i class="fa-solid fa-file-pen"></i>    
-                                <span class="ms-2">Exam Form</span>
-                            </a>
-                        </li>
-                        @* <li class="nav-item">
-                            <a class="nav-link @(currentController == "UserTest" ? "active" : "")"
-                               asp-controller="UserTest"
-                               asp-action="Index">
-                                <i class="fa-solid fa-pen-to-square text-light"></i>
-                                <span class="ms-2">Take Test</span>
-                            </a>
-                        </li> *@
+        @if (isAdmin)
+        {
+            <p class="sidebar-section-label">Students</p>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="@(currentController == "Students" ? "active" : "")"
+                       asp-controller="Students" asp-action="List">
+                        <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+                        All Students
+                    </a>
+                </li>
+            </ul>
+        }
 
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "History" ? "active" : "")"
-                               asp-controller="UserDashboard" asp-action="History">
-                                <i class="fa-solid fa-clock-rotate-left text-light"></i>
-                                <span class="ms-2">History</span>
-                            </a>
-                        </li>
+    </aside>
 
-                        <li class="nav-item">
-                            <a class="nav-link @(currentAction == "Notifications" ? "active" : "")"
-                               asp-controller="UserDashboard" asp-action="Notifications">
-                                <i class="fa-solid fa-bell text-light"></i>
-                                <span class="ms-2">Notifications</span>
-                            </a>
-                        </li>
+    <main class="sp-main">
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @RenderBody()
+    </main>
 
+    <footer class="sp-footer">
+        © @DateTime.Now.Year Student Portal — All rights reserved
+    </footer>
 
-
-                    }
-
-                    @if (isAdmin)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link @(currentController == "Students" ? "active" : "")"
-                               asp-controller="Students" asp-action="List">
-                                <i class="fa-solid fa-users"></i>
-                                Students
-                            </a>
-                        </li>
-                    }
-
-                </ul>
-
-            </aside>
-
-            <main class="col-md-10 dashboard-content">
-                @RenderBody()
-            </main>
-
-        </div>
-    </div>
-
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @RenderSection("Scripts", false)
 

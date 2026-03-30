@@ -22,7 +22,6 @@ namespace CRUDMVC.Controllers
             return View();
         }
 
-        // Load old messages
         public async Task<IActionResult> GetMessages()
         {
             var messages = await _context.ChatMessages
@@ -48,11 +47,44 @@ namespace CRUDMVC.Controllers
             _context.ChatMessages.Add(new ChatMessage
             {
                 SenderId = senderId,
-                ReceiverId = senderId, // dummy (not used now)
-                Message = message
+                ReceiverId = senderId,
+                Message = message,
+                Timestamp = DateTime.Now,
+                IsRead = false
             });
 
             await _context.SaveChangesAsync();
+            return Ok();
+        }
+
+
+        public async Task<IActionResult> GetUnreadCount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var count = await _context.ChatMessages
+                .Where(m => m.SenderId != userId && !m.IsRead)
+                .CountAsync();
+
+            return Json(count);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsRead()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var unreadMessages = await _context.ChatMessages
+                .Where(m => m.SenderId != userId && !m.IsRead)
+                .ToListAsync();
+
+            foreach (var msg in unreadMessages)
+            {
+                msg.IsRead = true;
+            }
+
+            await _context.SaveChangesAsync();
+
             return Ok();
         }
     }

@@ -3,62 +3,307 @@
     Layout = "_DashboardLayout";
 }
 
-<div class="container-fluid px-4 px-lg-5 py-4">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="fw-bold mb-0">My Achievements</h4>
+    :root {
+        --bg-card: #111111;
+        --bg-card-hover: #161616;
+        --border: rgba(255,255,255,0.06);
+        --border-hover: rgba(255,255,255,0.12);
+        --accent: #7DF9C0;
+        --accent-dim: rgba(125, 249, 192, 0.12);
+        --accent-glow: rgba(125, 249, 192, 0.25);
+        --danger: #FF6B6B;
+        --danger-dim: rgba(255, 107, 107, 0.1);
+        --text-primary: #F0F0F0;
+        --text-muted: #666;
+        --text-secondary: #999;
+    }
 
-        <a asp-action="AddAchievement"
-           class="btn btn-primary px-4">
-            + Add Achievement
+    .achievements-wrapper {
+        font-family: 'DM Sans', sans-serif;
+        padding: 2.5rem 2rem;
+        margin: 0 auto;
+    }
+
+    .achievements-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 2.5rem;
+    }
+
+        .achievements-header h1 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+            margin: 0 0 0.3rem;
+        }
+
+        .achievements-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+    .btn-add {
+        background: var(--accent);
+        color: #0a0a0a;
+        border: none;
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 0.8rem;
+        padding: 0.6rem 1.3rem;
+        border-radius: 100px;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+        box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+        .btn-add:hover {
+            background: #95ffd0;
+            color: #0a0a0a;
+            box-shadow: 0 0 30px var(--accent-glow);
+            transform: translateY(-1px);
+        }
+
+    .achievement-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    .achievement-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 1.5rem 1.8rem;
+        transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeSlide 0.4s ease both;
+    }
+
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 0% 0%, rgba(125,249,192,0.04) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .achievement-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-1px);
+        }
+
+            .achievement-card:hover::before {
+                opacity: 1;
+            }
+
+        .achievement-card:nth-child(1) {
+            animation-delay: 0.00s;
+        }
+
+        .achievement-card:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .achievement-card:nth-child(3) {
+            animation-delay: 0.09s;
+        }
+
+        .achievement-card:nth-child(4) {
+            animation-delay: 0.14s;
+        }
+
+        .achievement-card:nth-child(5) {
+            animation-delay: 0.18s;
+        }
+
+        .achievement-card:nth-child(6) {
+            animation-delay: 0.23s;
+        }
+
+    @@keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .achievement-title {
+        font-family: 'Syne', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+
+    .date-badge {
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
+        border-radius: 100px;
+        padding: 0.25rem 0.75rem;
+        white-space: nowrap;
+        letter-spacing: 0.03em;
+        flex-shrink: 0;
+    }
+
+    .achievement-desc {
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        margin: 0 0 1.2rem;
+        line-height: 1.6;
+    }
+
+    .card-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .record-label {
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .record-label::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent-glow);
+        }
+
+    .card-actions {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+    }
+
+    .btn-delete {
+        background: transparent;
+        border: 1px solid rgba(255,107,107,0.2);
+        color: var(--danger);
+        font-size: 0.74rem;
+        font-weight: 500;
+        font-family: 'DM Sans', sans-serif;
+        padding: 0.35rem 0.9rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        letter-spacing: 0.02em;
+    }
+
+        .btn-delete:hover {
+            background: var(--danger-dim);
+            border-color: var(--danger);
+            box-shadow: 0 0 12px rgba(255,107,107,0.2);
+        }
+
+    .btn-download {
+        background: var(--accent-dim);
+        border: 1px solid rgba(125,249,192,0.2);
+        color: var(--accent);
+        font-size: 0.74rem;
+        font-weight: 500;
+        font-family: 'DM Sans', sans-serif;
+        padding: 0.35rem 0.9rem;
+        border-radius: 100px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-decoration: none;
+        letter-spacing: 0.02em;
+    }
+
+        .btn-download:hover {
+            background: var(--accent);
+            color: #0a0a0a;
+            border-color: var(--accent);
+            box-shadow: 0 0 14px var(--accent-glow);
+            font-weight: 600;
+        }
+</style>
+
+<div class="achievements-wrapper" style="width:60vw;">
+    <div class="achievements-header">
+        <div>
+            <h1>My Achievements</h1>
+            <p>Your recorded milestones and certificates</p>
+        </div>
+        <a asp-action="AddAchievement" class="btn-add">
+            <i class="fa-solid fa-plus"></i> Add Achievement
         </a>
     </div>
 
-    <div class="row g-3">
+    <div class="achievement-list">
         @foreach (var item in Model)
         {
-            <div class="col-12">
-
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4">
-
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="fw-bold mb-0">@item.Title</h5>
-                            <span class="badge bg-light text-dark border">
-                                @item.AchievedOn.ToShortDateString()
-                            </span>
-                        </div>
-
-                        <p class="text-muted mb-3">
-                            @item.Description
-                        </p>
-
-                     
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted">
-                                Achievement Record
-                            </small>
-
-                         <div class="d-flex gap-2">
-                                <form> 
-                                    <button class="btn btn-outline-danger">Delete</button>
-                                </form>
-                                @if (!string.IsNullOrEmpty(item.CertificateFilePath))
-                                {
-                                    <a asp-action="DownloadCertificate"
-                                       asp-route-id="@item.Id"
-                                       class="btn btn-outline-success btn-sm px-3">
-                                        Download Certificate
-                                    </a>
-                                }
-                         </div>
-                        </div>
-
+            <div class="achievement-card">
+                <div class="card-top">
+                    <h5 class="achievement-title">@item.Title</h5>
+                    <span class="date-badge">@item.AchievedOn.ToShortDateString()</span>
+                </div>
+                <p class="achievement-desc">@item.Description</p>
+                <div class="card-bottom">
+                    <span class="record-label">Achievement Record</span>
+                    <div class="card-actions">
+                        <form method="post" style="margin:0">
+                            <button type="submit" class="btn-delete">
+                                <i class="fa-solid fa-trash-can"></i> Delete
+                            </button>
+                        </form>
+                        @if (!string.IsNullOrEmpty(item.CertificateFilePath))
+                        {
+                            <a asp-action="DownloadCertificate" asp-route-id="@item.Id" class="btn-download">
+                                <i class="fa-solid fa-download"></i> Certificate
+                            </a>
+                        }
                     </div>
                 </div>
-
             </div>
         }
     </div>
-
 </div>

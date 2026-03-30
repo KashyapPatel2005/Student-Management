@@ -44,7 +44,7 @@ public class AuthService : IAuthService
         if (!createResult.Succeeded)
             return (false, createResult.Errors.First().Description, null);
 
-        var role = isFirstUser ? "Admin" : "User";
+        var role = isFirstUser ? "Admin" : "User";      // admin@test.com -> Test@123
 
         var roleResult = await _userManager.AddToRoleAsync(user, role);
 
@@ -68,8 +68,8 @@ public class AuthService : IAuthService
             model.Password,
             lockoutOnFailure: true);
 
-        if (result.IsLockedOut)
-            return (false, "Account is locked. Try again later.");
+        //if (result.IsLockedOut)
+        //    return (false, "Account is locked. Try again later.");
 
         if (result.IsNotAllowed)
             return (false, "Login not allowed.");

@@ -52,7 +52,7 @@ builder.Services.AddSignalR(options =>
     options.EnableDetailedErrors = true;
 });
 
-builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+//builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
 
 builder.Services.AddScoped<IStudentService, StudentService>();
@@ -95,7 +95,6 @@ app.MapControllerRoute(
     pattern: "{controller=HomePage}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.MapHub<UserHub>("/hubs/userCounts");
 app.MapHub<ChatHub>("/hubs/chat");
 
 using (var scope = app.Services.CreateScope())
