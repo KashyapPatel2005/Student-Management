@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using CRUDMVC.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-[Authorize(Roles = "User")]
+[Authorize(Roles = "User,Admin")]
 public class UserController : Controller
 {
     private readonly IAchievementService _achievementService;
@@ -10,19 +12,21 @@ public class UserController : Controller
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly ILessonService _lessonService;
     private readonly IProgressService _progressService;
+    private readonly ApplicationDbContext _db;
 
 
 
     public UserController(
         IAchievementService achievementService,
         UserManager<IdentityUser> userManager,
-        SignInManager<IdentityUser> signInManager,ILessonService lessonService,IProgressService progressService)
+        SignInManager<IdentityUser> signInManager,ILessonService lessonService,IProgressService progressService, ApplicationDbContext db)
     {
         _achievementService = achievementService;
         _userManager = userManager;
         _signInManager = signInManager;
         _lessonService = lessonService;
         _progressService = progressService;
+        _db = db;
     }
 
     public async Task<IActionResult> Index()
@@ -155,6 +159,30 @@ public class UserController : Controller
         return View(lessons);
     }
 
+    public async Task<IActionResult> Notifications()
+    {
+        var notifications = await _db.Notifications.OrderByDescending(n => n.CreatedAt).ToListAsync();
+        return View(notifications);
+    }
+
+    public async Task<IActionResult> DownloadNotification(int id)
+    {
+        var notification = await _db.Notifications.FindAsync(id);
+        if (notification == null || string.IsNullOrEmpty(notification.FilePath))
+            return NotFound();
+
+        var filePath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "wwwroot",
+            notification.FilePath.TrimStart('/'));
+
+        if (!System.IO.File.Exists(filePath))
+            return NotFound();
+
+        var fileName = string.IsNullOrEmpty(notification.FileName) ? Path.GetFileName(filePath) : notification.FileName;
+        return PhysicalFile(filePath, "application/octet-stream", fileName);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CompleteLesson(int lessonId)
     {
@@ -184,8 +212,6 @@ public class UserController : Controller
        
         return View();
     }
-
-
 
 
 }

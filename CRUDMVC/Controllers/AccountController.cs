@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Data;
 using System.Security.Claims;
 
@@ -20,6 +21,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Register()
     {
         if (User.Identity.IsAuthenticated)
@@ -48,6 +50,7 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login()
     {
         if (User.Identity.IsAuthenticated)
@@ -83,10 +86,25 @@ public class AccountController : Controller
     }
 
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
+        // Sign out from Identity cookies and any external schemes
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
+
         await _authService.LogoutAsync();
+
         return RedirectToAction("Login");
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult AccessDenied(string returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
     }
 
 

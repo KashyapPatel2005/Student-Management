@@ -27,23 +27,45 @@ var jwtkey = Encoding.UTF8.GetBytes("THIS_IS_MY_SUPER_SECRET_JWT_KEY_1234567890_
 
 var google = builder.Configuration.GetSection("Authentication:Google");
 
-builder.Services.AddAuthentication()
-    .AddGoogle(options =>
+//builder.Services.AddAuthentication()
+//    .AddGoogle(options =>
+//    {
+//        options.ClientId = google["ClientId"];
+//        options.ClientSecret = google["ClientSecret"];
+//    })
+//    .AddJwtBearer("Jwt", options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = false,
+//            ValidateAudience = false,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            IssuerSigningKey = new SymmetricSecurityKey(jwtkey)
+//        };
+//    });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+})
+.AddGoogle(options =>
+{
+    options.ClientId = google["ClientId"];
+    options.ClientSecret = google["ClientSecret"];
+})
+.AddJwtBearer("Jwt", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.ClientId = google["ClientId"];
-        options.ClientSecret = google["ClientSecret"];
-    })
-    .AddJwtBearer("Jwt", options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(jwtkey)
-        };
-    });
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(jwtkey)
+    };
+});
 
 builder.Services.AddControllersWithViews();
 
